@@ -1,4 +1,7 @@
 #include <iostream>
+#include <iterator>
+#include <assert.h>
+#include <algorithm>
 #include <vector>
 #include <set>
 #include <map>
@@ -28,82 +31,52 @@ void dump(const map<string, string>& capitals) {
     cout << endl;
 }
 
-void rename(
-    map<string, string>& capitals,
-    const string& old_name,
-    const string& new_name
-) {
-    string msg = "Incorrect rename, skip";
-    if (old_name == new_name) {cout << msg << endl; return;}
-    if (capitals.find(new_name)->first == new_name) {cout << msg << endl; return;}
-    auto it = capitals.find(old_name);
-    if (it == end(capitals)) { cout << msg << endl; return;}
-    string capital = it->second;
-    capitals.erase(it);
-    capitals[new_name] = capital;
-    cout
-        << "Country " << old_name
-        << " with capital " << it->second
-        << " has been renamed to " << new_name
-        << endl;
-}
-
-void insert_or_update(
-    map<string, string>& capitals,
-    const string& country,
-    const string& new_capital
-) {
-    auto [it, inserted] = capitals.insert({country, new_capital});
-    if (inserted) {
-        cout << "Introduce new country " << country << " with capital " << new_capital;
-    } else {
-        string old_capital = it->second;
-        cout << "Country " << country;
-        if (old_capital == new_capital) {
-            cout << " hasn't changed its capital";
-        } else {
-            cout
-                << " has changed its capital from " << old_capital
-                << " to " << new_capital;
+bool is_palindrom(const string& word) {
+    for (unsigned int i = 0; i < word.size() / 2; i++) {
+        if (word[i] != word[word.size() - 1 - i]) {
+            return false;
         }
-        it->second = new_capital;
     }
-    cout << endl;
+    return true;
 }
 
-void about(const map<string, string>& capitals, const string& country) {
-    auto it = capitals.find(country);
-    cout << "Country " << country;
-    if (it == end(capitals)) {
-        cout << " doesn't exist";
-    } else {
-        cout << " has capital " << it->second;
-    }
-    cout << endl;
+vector<string> PalindromFilter(vector<string> words, int minLength) {
+    vector<string> result;
+    auto predicate = [minLength](auto w) {return w.size() >= minLength && is_palindrom(w);};
+    copy_if(begin(words), end(words), back_inserter(result), predicate);
+    return result;
 }
 
+void add_route(
+    map<string, vector<string>>& routes,
+    const string& bus,
+    const vector<string>& stops
+) {
+    vector<string> route = routes[bus];
+    route.insert(end(route), begin(stops), end(stops));
+}
+
+void print_all_buses(map<string, vector<string>> routes) {
+    for (auto& [bus, route] : routes) {
+        cout << "Bus " << bus << ':';
+        auto it = begin(route);
+        for (auto stop : route) {
+            cout << ' ' << stop;
+        }
+    }
+}
+
+void print_buses_for_stop(const string& stop, const set<string>& buses) {
+    cout << "Stop " << stop << 
+}
 
 int main() {
-    unsigned int n;
-    map<string, string> capitals;
-    cin >> n;
-    while (n--) {
-        string cmd;
-        cin >> cmd;
-        if (cmd == "CHANGE_CAPITAL") {
-            string country, capital;
-            cin >> country >> capital;
-            insert_or_update(capitals, country, capital);
-        } else if (cmd == "RENAME") {
-            string from, to;
-            cin >> from >> to;
-            rename(capitals, from, to);
-        } else if (cmd == "ABOUT") {
-            string country;
-            cin >> country;
-            about(capitals, country);
-        } else if (cmd == "DUMP") {
-            dump(capitals);
-        }
+    map<string, vector<string>> routes;
+    unsigned int i;
+    string operation;
+    cin >> i;
+    while (i--) {
+        cin >> operation;
+        if (operation == "ALL_BUSES")
     }
 }
