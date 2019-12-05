@@ -57,17 +57,38 @@ void add_route(
 }
 
 void print_all_buses(map<string, vector<string>> routes) {
+    if (routes.empty()) {
+        cout << "No buses" << endl;
+    }
     for (auto& [bus, route] : routes) {
         cout << "Bus " << bus << ':';
         auto it = begin(route);
         for (auto stop : route) {
             cout << ' ' << stop;
         }
+        cout << endl;
     }
 }
 
-void print_buses_for_stop(const string& stop, const set<string>& buses) {
-    cout << "Stop " << stop << 
+void print_stops_for_bus(map<string, vector<string>> routes) {
+
+}
+
+void print_buses_for_stop(map<string, vector<string>> routes, const string& stop) {
+    bool found = false;
+    for (auto& [bus, route]: routes)  {
+        if (find(begin(route), end(route), stop) != end(route)) {
+            found = true;
+            if (!found) {
+                cout << "Stop " << stop;
+            }
+            cout << ' ' << bus;
+        }
+    }
+    if (!found) {
+        cout << "No stop";
+    }
+    cout << endl;
 }
 
 int main() {
@@ -77,6 +98,13 @@ int main() {
     cin >> i;
     while (i--) {
         cin >> operation;
-        if (operation == "ALL_BUSES")
+        if (operation == "ALL_BUSES") {
+            print_all_buses(routes);
+        } else if (operation == "BUSES_FOR_STOP") {
+            string stop;
+            cin >> stop;
+            print_buses_for_stop(routes, stop);
+        } else if (operation == "STOPS_FOR_BUS") {
+        }
     }
 }
